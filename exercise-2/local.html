@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Todo list App</title>
+  <link rel="stylesheet" type="text/css" href="myStyle.css" />
+  <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="heading">TODO LIST</h1>
+    <div class="todo">
+      <div class="addTodo">
+        <h3>Add Task</h3>
+        <form>
+          <input id="taskInput" type="text" name="name" required placeholder="Add your Task" />
+          <input type="hidden" id="saveIndex">
+          <button id="addBtn" type="button">Add Task</button>
+          <button id="saveBtn" style="display:none;" type="button">Save Task</button>
+          <button id="deleteallBtn" type="button">Delete All</button>
+        
+
+        </form>
+      </div>
+      
+      <div class="list">
+        <h3>To do Task</h3>
+        <div class="addedTask">
+            <table id="addedtaskList"></table>
+          <!-- <button id="edit">Edit</button>
+    <button id="deleteButton" type="button">Delete</button> -->
+
+<!-- <div class="completedTaskList">
+    <h3>
+      <b>Completed</b>
+    </h3>
+    <div id="completed-tasks">
+        
+    </div>
+  </div> -->
+  </div>
+
+  <script type="text/javascript">
+   const taskInput = document.getElementById('taskInput');
+    const addBtn = document.getElementById('addBtn');
+    
+
+    addBtn.addEventListener("click",function(){
+        taskvalue = taskInput.value;
+        if(taskvalue.trim()!=0){
+        let webtask = localStorage.getItem("localtask");
+        if(webtask == null){
+            taskObj = [];
+        }
+        else{
+            taskObj = JSON.parse(webtask);
+        }
+        taskObj.push(taskvalue);
+        localStorage.setItem("localtask",JSON.stringify(taskObj));
+        taskInput.value = '';
+    }
+        showTask();
+    })
+    function showTask(){
+        let webtask = localStorage.getItem("localtask");
+        if(webtask == null){
+            taskObj = [];
+        }
+        else{
+            taskObj = JSON.parse(webtask);
+        }
+        let html='';
+        const addedtaskList = document.getElementById('addedtaskList');
+        taskObj.forEach((item, index) => {
+            html += `
+            <tr>
+                <th scope="row">${index+1}</th>
+                <td>${item}</td>
+                <td>
+                   <button type="button" onclick="editTask(${index})" class="text-primary">Edit</button>
+                </td>
+                <td>
+                   <button type="button" onclick="deleteTask(${index})" class="text-primary">Delete</button>
+                </td>
+            </tr>
+            `
+            
+        });
+        addedtaskList.innerHTML = html;
+    }
+
+    //edit task
+    function editTask(index){
+        let saveIndex = document.getElementById('saveIndex');
+        let addBtn = document.getElementById('addBtn');
+        let saveBtn = document.getElementById('saveBtn');
+        saveIndex.value = index;
+        let webtask = localStorage.getItem("localtask");
+        let taskObj = JSON.parse(webtask);
+        taskInput.value = taskObj[index];
+        addBtn.style.display="none";
+        saveBtn.style.display="inline-block";
+        // saveBtn.style.margin="473px 80px ";
+
+
+    }
+
+    //save task
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.addEventListener("click", function(){
+        let webtask = localStorage.getItem("localtask");
+        let taskObj = JSON.parse(webtask);
+        let saveIndex = document.getElementById('saveIndex').value;
+        taskObj[saveIndex] = taskInput.value;
+        saveBtn.style.display="none";
+        addBtn.style.display="inline-block";
+        localStorage.setItem("localtask",JSON.stringify(taskObj));
+        taskInput.value = '';
+        showTask();
+    })
+// delete task 
+    function deleteTask(index){
+        let webtask = localStorage.getItem("localtask");
+        let taskObj = JSON.parse(webtask);
+        taskObj.splice(index, 1);
+        localStorage.setItem("localtask",JSON.stringify(taskObj));
+        taskInput.value = '';
+        showTask();
+    }
+
+    //deleteAll
+    let deleteallBtn = document.getElementById('deleteallBtn');
+
+  deleteallBtn.addEventListener("click", function(){
+    let webtask = localStorage.getItem("localtask");
+    let addBtn = document.getElementById('addBtn');
+        let saveBtn = document.getElementById('saveBtn');
+        let taskObj = JSON.parse(webtask);
+        if(webtask == null){
+            taskObj = [];
+        }
+        else{
+            taskObj = JSON.parse(webtask);
+            taskObj = [];
+        }
+        saveBtn.style.display="none";
+        addBtn.style.display="inline-block";
+        localStorage.setItem("localtask",JSON.stringify(taskObj));
+        taskInput.value = '';
+        showTask();
+  })
+
+    let
+  </script>
+</body>
+
+</html>
